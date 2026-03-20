@@ -192,6 +192,10 @@ func (db *Dashboard) funcMap() template.FuncMap {
 	}
 }
 
+func (db *Dashboard) AbsLink(uri string) string {
+	return xhttp.PathJoin(db.GetPathPrefix(), uri)
+}
+
 func (db *Dashboard) encrypt(text string) (string, error) {
 	bf, err := db.cipher.Encrypt([]byte(text))
 	if err != nil {
