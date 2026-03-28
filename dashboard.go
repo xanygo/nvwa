@@ -11,6 +11,7 @@ import (
 	"io/fs"
 	"maps"
 	"net/http"
+	"path"
 	"sync"
 
 	"github.com/xanygo/anygo/ds/xmap"
@@ -57,6 +58,10 @@ func (db *Dashboard) doInit() {
 		t = t.Funcs(funcMap)
 		return template.Must(xhtml.WalkParseFS(t, db.TemplateFS, ".", "*.html"))
 	})
+
+	if db.AssetPrefix != "" {
+		db.AssetPrefix = path.Clean(db.AssetPrefix) + "/"
+	}
 
 	db.cipher = &xcodec.AesOFB{
 		Key: db.SecretKey,
