@@ -33,6 +33,8 @@ type Dashboard struct {
 	RegisterAsset string        // 在 PathPrefix 下注册 asset 的目录名，若有值则会注册
 	Bundle        *xi18n.Bundle // 国际化资源，可选
 
+	FuncMap template.FuncMap // 可选，注册到模版中的自定义方法
+
 	SecretKey string // 加密秘钥，必填
 	cipher    xcodec.Cipher
 
@@ -55,7 +57,7 @@ func (db *Dashboard) doInit() {
 	funcMap := db.funcMap()
 	maps.Copy(funcMap, xhtml.FuncMap)
 	db.tpl = xi18n.BuildTemplate(xi18n.LangZh, db.Bundle, func(t *template.Template) *template.Template {
-		t = t.Funcs(funcMap)
+		t = t.Funcs(funcMap).Funcs(db.FuncMap)
 		return template.Must(xhtml.WalkParseFS(t, db.TemplateFS, ".", "*.html"))
 	})
 
