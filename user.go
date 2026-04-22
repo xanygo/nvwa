@@ -102,7 +102,7 @@ func (t *userHandler) checkLogin(h http.Handler) http.Handler {
 
 func (t *userHandler) loginIndex(w http.ResponseWriter, req *http.Request) {
 	values := map[string]any{
-		"Title": anygo.Must1(xi18n.RC(i18nResource, req, "user@loginTitle")),
+		"Title": anygo.Must1(xi18n.RC(i18nResource, req, "user/loginTitle")),
 	}
 	t.Board.Render(req.Context(), w, req, "login.html", values)
 }
@@ -128,7 +128,7 @@ func (t *userHandler) loginCheck(w http.ResponseWriter, req *http.Request) {
 
 	if !xsession.EqualAndDelete(req.Context(), session, captionKey, form.Code) {
 		// metric.LoginFailed()
-		txt := anygo.Must1(xi18n.RC(i18nResource, req, "user@invalidCode"))
+		txt := anygo.Must1(xi18n.RC(i18nResource, req, "user/invalidCode"))
 		webr.WriteJSON(w, 400, txt, nil)
 		return
 	}
@@ -141,7 +141,7 @@ func (t *userHandler) loginCheck(w http.ResponseWriter, req *http.Request) {
 		t.clearLoginCookie(w)
 		// metric.LoginFailed()
 		xlog.AddAttr(ctx, xlog.ErrorAttr("error", err))
-		txt := anygo.Must1(xi18n.RC(i18nResource, req, "user@loginFailed"))
+		txt := anygo.Must1(xi18n.RC(i18nResource, req, "user/loginFailed"))
 		webr.WriteJSON(w, 2, txt, nil)
 		return
 	}
@@ -158,7 +158,7 @@ func (t *userHandler) loginCheck(w http.ResponseWriter, req *http.Request) {
 	http.SetCookie(w, authCookie)
 	_ = session.Save(ctx)
 
-	txt := anygo.Must1(xi18n.RC(i18nResource, req, "user@loginSuc"))
+	txt := anygo.Must1(xi18n.RC(i18nResource, req, "user/loginSuc"))
 	webr.WriteJSON(w, 0, txt, nil)
 }
 
