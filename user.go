@@ -12,9 +12,9 @@ import (
 	"time"
 
 	"github.com/xanygo/anygo"
-	"github.com/xanygo/anygo/ds/xctx"
-	"github.com/xanygo/anygo/ds/xhash"
 	"github.com/xanygo/anygo/store/xsession"
+	"github.com/xanygo/anygo/xctx"
+	"github.com/xanygo/anygo/xhash"
 	"github.com/xanygo/anygo/xhttp"
 	"github.com/xanygo/anygo/xi18n"
 	"github.com/xanygo/anygo/xlog"
@@ -88,7 +88,7 @@ func (t *userHandler) checkLogin(h http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		user, err := t.loadUserFromCooke(r)
 		if err != nil {
-			xlog.AddAttr(r.Context(), xlog.ErrorAttr("error", err))
+			xlog.AddAttr(r.Context(), xlog.Err("error", err))
 			http.Redirect(w, r, xhttp.PathJoin(t.Board.GetPathPrefix(), "/login"), http.StatusFound)
 			return
 		}
@@ -140,7 +140,7 @@ func (t *userHandler) loginCheck(w http.ResponseWriter, req *http.Request) {
 	if err != nil {
 		t.clearLoginCookie(w)
 		// metric.LoginFailed()
-		xlog.AddAttr(ctx, xlog.ErrorAttr("error", err))
+		xlog.AddAttr(ctx, xlog.Err("error", err))
 		txt := anygo.Must1(xi18n.RC(i18nResource, req, "user/loginFailed"))
 		webr.WriteJSON(w, 2, txt, nil)
 		return

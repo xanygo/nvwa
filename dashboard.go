@@ -14,16 +14,17 @@ import (
 	"path"
 	"sync"
 
-	"github.com/xanygo/anygo/ds/xmap"
-	"github.com/xanygo/anygo/ds/xsync"
-	"github.com/xanygo/anygo/xcodec"
-	"github.com/xanygo/anygo/xcodec/xbase"
+	"github.com/xanygo/anygo/xenc"
+	"github.com/xanygo/anygo/xenc/xbase"
+	"github.com/xanygo/anygo/xenc/xcipher"
 	"github.com/xanygo/anygo/xhtml"
 	"github.com/xanygo/anygo/xhttp"
 	"github.com/xanygo/anygo/xhttp/xhandler"
 	"github.com/xanygo/anygo/xi18n"
 	"github.com/xanygo/anygo/xio/xfs"
 	"github.com/xanygo/anygo/xlog"
+	"github.com/xanygo/anygo/xmap"
+	"github.com/xanygo/anygo/xsync"
 	"github.com/xanygo/webr"
 )
 
@@ -36,7 +37,7 @@ type Dashboard struct {
 	FuncMap template.FuncMap // 可选，注册到模版中的自定义方法
 
 	SecretKey string // 加密秘钥，必填
-	cipher    xcodec.Cipher
+	cipher    xenc.Cipher
 
 	TemplateFS fs.FS                                                          // 模版文件，必填
 	tpl        *xmap.Tags[xi18n.Language, *template.Template, xi18n.Language] // 由 TemplateFS 编译得到的模版
@@ -65,7 +66,7 @@ func (db *Dashboard) doInit() {
 		db.AssetPrefix = path.Clean(db.AssetPrefix) + "/"
 	}
 
-	db.cipher = &xcodec.AesOFB{
+	db.cipher = &xcipher.AesOFB{
 		Key: db.SecretKey,
 	}
 
@@ -146,25 +147,29 @@ func (db *Dashboard) Render(ctx context.Context, w http.ResponseWriter, req *htt
 	err := db.tpl.Any(xi18n.LangZh, languages...).ExecuteTemplate(w, fileName, data)
 	if err != nil {
 		_, _ = w.Write([]byte("Render failed:" + template.HTMLEscapeString(err.Error())))
-		xlog.Warn(ctx, "Render failed", xlog.String("fileName", fileName), xlog.ErrorAttr("error", err))
+		xlog.Warn(ctx, "Render failed", xlog.String("fileName", fileName), xlog.Err("error", err))
 	}
 }
 
 // RenderWithLayout 渲染外部注册资源的模版文件,然后将内容渲染到模版文件
 func (db *Dashboard) RenderWithLayout(ctx context.Context, w http.ResponseWriter, req *http.Request, fileName string, data map[string]any) {
+	db.RenderTemplate(ctx, w, req, "layout/layout.html", fileName, data)
+}
+
+func (db *Dashboard) RenderTemplate(ctx context.Context, w http.ResponseWriter, req *http.Request, layout string, fileName string, data map[string]any) {
 	if data == nil {
 		data = make(map[string]any)
 	}
 	deps := &xhtml.Deps{}
 	data["deps"] = deps
+	data["TR"] = xhtml.NewTPLRequest(req)
+	data["nvwa_asset"] = db.fnNvwaAssetPath
+	data["nvwa_user"] = UserFormContext(req.Context())
 
 	if xhttp.IsAjax(req) {
 		db.Render(ctx, w, req, fileName, data)
 		return
 	}
-	data["TR"] = xhtml.NewTPLRequest(req)
-	data["nvwa_asset"] = db.fnNvwaAssetPath
-	data["nvwa_user"] = UserFormContext(req.Context())
 
 	bf := xsync.GetBytesBuffer()
 	languages := xi18n.LanguagesFromContext(ctx)
@@ -173,12 +178,12 @@ func (db *Dashboard) RenderWithLayout(ctx context.Context, w http.ResponseWriter
 	if err == nil {
 		data["Body"] = bf.String()
 		xsync.PutBytesBuffer(bf)
-		err = tpl.ExecuteTemplate(w, "layout.html", data)
+		err = tpl.ExecuteTemplate(w, layout, data)
 	}
 
 	if err != nil {
 		_, _ = w.Write([]byte("RenderWithLayout failed:" + template.HTMLEscapeString(err.Error())))
-		xlog.Warn(ctx, "RenderWithLayout failed", xlog.String("fileName", fileName), xlog.ErrorAttr("error", err))
+		xlog.Warn(ctx, "RenderWithLayout failed", xlog.String("fileName", fileName), xlog.Err("error", err))
 	}
 }
 
