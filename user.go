@@ -6,6 +6,8 @@ package nvwa
 
 import (
 	"context"
+	"crypto/md5"
+	"encoding/hex"
 	"errors"
 	"net/http"
 	"strings"
@@ -14,7 +16,6 @@ import (
 	"github.com/xanygo/anygo"
 	"github.com/xanygo/anygo/store/xsession"
 	"github.com/xanygo/anygo/xctx"
-	"github.com/xanygo/anygo/xhash"
 	"github.com/xanygo/anygo/xhttp"
 	"github.com/xanygo/anygo/xi18n"
 	"github.com/xanygo/anygo/xlog"
@@ -67,7 +68,8 @@ func (t *userHandler) loadUserFromCooke(r *http.Request) (*User, error) {
 }
 
 func (t *userHandler) authCookieValue(u *User) (string, error) {
-	m5 := xhash.Md5(u.Username + "--" + u.AuthCode)
+	sum := md5.Sum([]byte(u.Username + "--" + u.AuthCode))
+	m5 := hex.EncodeToString(sum[:])
 	return t.Board.encrypt(u.Username + "|" + m5)
 }
 
