@@ -1,4 +1,4 @@
-github.com/xanygo/anygo v0.0.0-20260908060515-8f2aa50e9f04 h1:ZtKATPWIXxKp5bxhrHJl4mKXBKJLBdqkgt2w9BpMU7k=
-github.com/xanygo/anygo v0.0.0-20260908060515-8f2aa50e9f04/go.mod h1:zpUt2D4+10gv7pDKsdYZQMl3Kqta0q0CwbgziqAvqCk=
-github.com/xanygo/webr v0.0.0-20260907065448-67e686a23ad5 h1:SuRiV7t9z8/gmMJ05DwK9uCbFdXukP8sT9ednFU5Kcg=
-github.com/xanygo/webr v0.0.0-20260907065448-67e686a23ad5/go.mod h1:0OQhEAUhLbPNJ7Kz7F8FE41dkAepo5mobZq8DygBsdQ=
+github.com/xanygo/anygo v0.0.0-20260910023213-63ac3336a5a8 h1:V8lNR3InD5MD2mir788XuTgws/73RYA5I25qmevAutU=
+github.com/xanygo/anygo v0.0.0-20260910023213-63ac3336a5a8/go.mod h1:zpUt2D4+10gv7pDKsdYZQMl3Kqta0q0CwbgziqAvqCk=
+github.com/xanygo/webr v0.0.0-20260910023435-c4baf2ed7645 h1:RPqSAppwxcAppoT+CSQibg3stRp9KV8e5dTK1I2lBcs=
+github.com/xanygo/webr v0.0.0-20260910023435-c4baf2ed7645/go.mod h1:TJtW92whhduExJuQLGwXjhM0TJBiMJ7i/yZOvU2zl58=

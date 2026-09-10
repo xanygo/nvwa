@@ -14,9 +14,9 @@ import (
 	"time"
 
 	"github.com/xanygo/anygo"
-	"github.com/xanygo/anygo/store/xsession"
 	"github.com/xanygo/anygo/xctx"
 	"github.com/xanygo/anygo/xhttp"
+	"github.com/xanygo/anygo/xhttp/xsession"
 	"github.com/xanygo/anygo/xi18n"
 	"github.com/xanygo/anygo/xlog"
 	"github.com/xanygo/webr"

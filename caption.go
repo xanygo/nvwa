@@ -7,8 +7,8 @@ package nvwa
 import (
 	"net/http"
 
-	"github.com/xanygo/anygo/store/xsession"
 	"github.com/xanygo/anygo/xhttp"
+	"github.com/xanygo/anygo/xhttp/xsession"
 	"github.com/xanygo/anygo/ximage/caption"
 )
 
@@ -22,8 +22,8 @@ const captionKey = "caption"
 
 func codeHandler(w http.ResponseWriter, r *http.Request) {
 	// if !metric.CaptionCanShow() {
-	//	codeForbidden.ServeHTTP(w, r)
-	//	return
+	// 	codeForbidden.ServeHTTP(w, r)
+	// 	return
 	// }
 	capt := caption.NewArithmetic()
 
