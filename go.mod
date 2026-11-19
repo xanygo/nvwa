@@ -1,8 +1,8 @@
 module github.com/xanygo/nvwa
 
-go 1.27.1
+go 1.27.3
 
 require (
-	github.com/xanygo/anygo v0.0.0-20260916120254-c8f5646ba97b
-	github.com/xanygo/webr v0.0.0-20260918032814-391b677fc692
+	github.com/xanygo/anygo v0.0.0-20261117114457-cbe1138d69d0
+	github.com/xanygo/webr v0.0.0-20261028045543-09738d97e3a9
 )
